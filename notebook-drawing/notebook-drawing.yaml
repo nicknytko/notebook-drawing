@@ -1,0 +1,6 @@
+Type: Jupyter Notebook Extension
+Name: Freehand Drawing in Notebook
+Description: |
+  Adds a freehand drawing element to the notebook interface.
+Link: readme.md
+Compatability: 6.x 

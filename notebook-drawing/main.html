@@ -1,0 +1,145 @@
+<div style="height: 500px; position: relative; top: -35px; width: 1103px" class="container">
+<style>
+  .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      height: 40px;
+      left: 0;
+      right: 0;
+      background: #FAFAFA;
+      box-shadow: 0px 0px 2px #757575;
+      z-index: 2;
+  }
+  canvas {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 40px;
+      bottom: 0;
+      overscroll-behavior: none;
+      z-index: 1;
+  }
+  .control-group {
+      margin-left: 10px;
+      margin-right: 10px;
+      height: 40px;
+  }
+  .control {
+      display: inline-block;
+      height: 30px;
+      padding: 5px;
+      user-select: none;
+      -webkit-user-select: none;
+  }
+  img {
+      height: 30px;
+      background: #FAFAFA;
+      clip-path: circle(30px);
+      -webkit-clip-path: circle(30px);
+      transition: clip-path 0.3s ease-in-out, -webkit-clip-path 0.3s ease-in-out;
+      pointer-events: none;
+      -webkit-pointer-events: none;
+  }
+  div.control:not(.selected) > :last-child {
+      clip-path: circle(0px);
+      -webkit-clip-path: circle(0px);
+  }
+  .setting {
+      width: 30px;
+      height: 30px;
+      padding: 5px;
+      display: inline-block;
+      user-select: none;
+      -webkit-user-select: none;
+  }
+  .setting-select {
+      width: 30px;
+      height: 30px;
+      display: block;
+      margin-top: -30px;
+      transform: translate(0, 30px);
+  }
+  .circle {
+      border-radius: 100%;
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+  }
+  .eraser-circle {
+      border-radius: 100%;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #757575;
+      pointer-events: none;
+
+      position: fixed;
+      transform: translate(-50%, -50%);
+  }
+  .popup {
+      position: absolute;
+      transform: translate(calc(15px - 50%), 0);
+      opacity: 1.0;
+      background: #FAFAFA;
+      box-shadow: 0px 0px 2px #757575;
+      padding: 8px;
+      padding-bottom: 4px;
+      border-radius: 15px;
+      transition: all 0.15s ease-in-out;
+      transition-property: transform, opacity;
+      z-index: 2;
+  }
+  .popup.hidden {
+      opacity: 0.0;
+      transform: translate(calc(15px - 50%), -10px);
+      pointer-events: none;
+  }
+  input[type=range] {
+      width: 100%;
+  }
+  .width-preview {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+  }
+</style>
+<div class="controls">
+  <div class="control-group">
+    <div class="control" control="pen">
+      <img src="pen.svg" style="margin-right: -34px" />
+      <img src="pen_selected.svg" />
+    </div>
+    <div class="control" control="eraser">
+      <img src="eraser.svg" style="margin-right: -34px" />
+      <img src="eraser_selected.svg" />
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="setting" setting="color">
+      <div class="setting-select"></div>
+      <object type="image/svg+xml" data="color.svg" style="width: 30px; height: 30px"></object>
+      <div class="popup hidden" popup="color">
+        <div class="circle" style="background-color: #FFEB3B"></div>
+        <div class="circle" style="background-color: #FF9800"></div>
+        <div class="circle" style="background-color: #F44336"></div>
+        <div class="circle" style="background-color: #E91E63"></div>
+        <div class="circle" style="background-color: #9C27B0"></div>
+        <div class="circle" style="background-color: #3F51B5"></div><br>
+        <div class="circle" style="background-color: #00BCD4"></div>
+        <div class="circle" style="background-color: #4CAF50"></div>
+        <div class="circle" style="background-color: #795548"></div>
+        <div class="circle" style="background-color: #E0E0E0"></div> 
+        <div class="circle" style="background-color: #616161"></div> 
+        <div class="circle" style="background-color: #000000"></div>
+
+        <object type="image/svg+xml" data="width.svg" class="width-preview"></object>                       
+        <input type="range" value="50" class="slider">
+      </div>
+    </div>
+  </div>
+  <div class="eraser-circle"></div>
+</div>
+<canvas></canvas>
+</div>

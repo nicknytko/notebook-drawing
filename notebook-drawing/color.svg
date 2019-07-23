@@ -1,0 +1,4 @@
+<svg viewBox="-50 -50 100 100" xmlns="http://www.w3.org/2000/svg">
+  <circle r="40" fill="none" stroke="#757575" stroke-width="2" />
+  <circle id="color-circle" r="40" transform="scale(1)" />
+</svg>
