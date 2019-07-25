@@ -10,7 +10,6 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
             }
 
             let objs = document.querySelectorAll("object");
-            console.log(objs);
             for (let i = 0; i < objs.length; i++) {
                 let splt = objs[i].data.split("/");
                 let src = splt[splt.length - 1];
@@ -21,6 +20,8 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
         
         var canvas = document.querySelector("canvas");
         var ctx = canvas.getContext("2d");
+        var autosave = null;
+        var autosaveTimer = null;
 
         /** Scaling of the canvas's internal resolution */
         const scale = 2;
@@ -28,6 +29,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
         const eraser_scale = 3;
         const min_width = 2;
         const max_width = 20;
+        const autosave_timeout = 1000;
 
         /** Width of the pen stroke */
         var width = 10;
@@ -55,13 +57,15 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
             widthLine = widthSvg.getSVGDocument().getElementById("width");
             setWidthSetting(parseFloat(widthSlider.value));
         });
-        window.addEventListener("load", function() {
+        let onTryLoad = function() {
             try {
                 colorCircle = colorSvg.getSVGDocument().getElementById("color-circle");
                 widthLine = widthSvg.getSVGDocument().getElementById("width");
                 setWidthSetting(parseFloat(widthSlider.value));
             } catch {}
-        });
+        };
+        window.addEventListener("load", onTryLoad);
+        onTryLoad();
 
         class DrawingPoint {
             constructor(event) {
@@ -311,6 +315,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
          * @param id The touch id, or string "mouse" if a mouse event.
          */
         function onMoveEvent(touch, id) {
+            clearAutosave();
             if (touches[id] !== undefined) {
                 let buffer = touches[id];
                 
@@ -338,6 +343,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
          * @param id The touch id, or string "mouse" if a mouse event.
          */
         function onDownEvent(touch, id) {
+            clearAutosave();
             hideColorPopup();
             if (curTool === null) {
                 return;
@@ -377,6 +383,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
                 if (curTool === "eraser") {
                     hideEraserCircle();
                 }
+                tryAutosave();
             }    
         }
 
@@ -393,10 +400,35 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
         }
         resizeCanvas();
 
+        function tryAutosave() {
+            clearAutosave();
+            autosaveTimer = setTimeout(() => {
+                if (autosave !== null) {
+                    autosave();
+                }
+                autosaveTimer = null;
+            }, autosave_timeout);
+        }
+
+        function clearAutosave() {
+            if (autosaveTimer !== null) {
+                clearTimeout(autosaveTimer);
+            }
+        }
+
+        function loadImageFromUrl(url) {
+            let image = new Image(1, 1);
+            image.src = url;
+            image.onload = function() {
+                ctx.drawImage(image, 0, 0);
+                autosave();
+            }
+        }
+        
         document.addEventListener("contextmenu", (ev) => {
             ev.preventDefault();
         });
-
+        
         /* Touch event handlers */
         canvas.addEventListener("touchstart", (ev) => {
             ev.preventDefault();    
@@ -467,12 +499,27 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
         widthSlider.addEventListener("input", (ev) => {
             setWidthSetting(parseFloat(widthSlider.value));
         });
+
+        exports = {
+            resize: resizeCanvas,
+            canvas: canvas,
+            context: ctx,
+            getCanvasData: function() {
+                return canvas.toDataURL();
+            },
+            setAutosaveHandler: function(handler) {
+                autosave = handler;
+            },
+            loadImageFromUrl: loadImageFromUrl
+        };
+        
+        return exports;
     }
 
     function initialise(container) {
         $(container).append($(menuText));
         let drawingContainer = $(container).find(".container")[0];
-        createContext(drawingContainer);
+        return createContext(drawingContainer);
     }
     
     return {

@@ -1,4 +1,4 @@
-<div style="height: 500px; position: relative; top: -35px; width: 1103px" class="container">
+<div style="height: 540px; margin-bottom: -8px; position: relative; top: -4px; width: 1102px; border-color: #ababab; border-width: 1px; border-style: solid;" class="container">
 <style>
   .controls {
       display: flex;
@@ -13,7 +13,7 @@
       box-shadow: 0px 0px 2px #757575;
       z-index: 2;
   }
-  canvas {
+  .drawing-canvas {
       position: absolute;
       left: 0;
       right: 0;
@@ -34,7 +34,7 @@
       user-select: none;
       -webkit-user-select: none;
   }
-  img {
+  .control-icon {
       height: 30px;
       background: #FAFAFA;
       clip-path: circle(30px);
@@ -87,14 +87,14 @@
       padding: 8px;
       padding-bottom: 4px;
       border-radius: 15px;
-      transition: all 0.15s ease-in-out;
-      transition-property: transform, opacity;
+      transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
       z-index: 2;
   }
   .popup.hidden {
       opacity: 0.0;
       transform: translate(calc(15px - 50%), -10px);
       pointer-events: none;
+      transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out;
   }
   input[type=range] {
       width: 100%;
@@ -108,12 +108,12 @@
 <div class="controls">
   <div class="control-group">
     <div class="control" control="pen">
-      <img src="pen.svg" style="margin-right: -34px" />
-      <img src="pen_selected.svg" />
+      <img class="control-icon" src="pen.svg" style="margin-right: -34px" />
+      <img class="control-icon" src="pen_selected.svg" />
     </div>
     <div class="control" control="eraser">
-      <img src="eraser.svg" style="margin-right: -34px" />
-      <img src="eraser_selected.svg" />
+      <img class="control-icon" src="eraser.svg" style="margin-right: -34px" />
+      <img class="control-icon" src="eraser_selected.svg" />
     </div>
   </div>
   <div class="control-group">
@@ -141,5 +141,5 @@
   </div>
   <div class="eraser-circle"></div>
 </div>
-<canvas></canvas>
+<canvas class="drawing-canvas"></canvas>
 </div>
