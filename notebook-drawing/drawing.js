@@ -24,12 +24,15 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
         var autosaveTimer = null;
 
         /** Scaling of the canvas's internal resolution */
-        const scale = 2;
+        var scale = 2;
         const min_dist = 7;
         const eraser_scale = 3;
         const min_width = 2;
         const max_width = 20;
         const autosave_timeout = 1000;
+
+        const canvas_width = 2205;
+        const aspect = 1.75;
 
         /** Width of the pen stroke */
         var width = 10;
@@ -315,7 +318,6 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
          * @param id The touch id, or string "mouse" if a mouse event.
          */
         function onMoveEvent(touch, id) {
-            clearAutosave();
             if (touches[id] !== undefined) {
                 let buffer = touches[id];
                 
@@ -335,6 +337,8 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
                     }
                 }        
             }
+
+            tryAutosave();
         }
 
         /**
@@ -343,7 +347,6 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
          * @param id The touch id, or string "mouse" if a mouse event.
          */
         function onDownEvent(touch, id) {
-            clearAutosave();
             hideColorPopup();
             if (curTool === null) {
                 return;
@@ -366,6 +369,8 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
                 showEraserCircle(width);
                 moveEraser(newpt);
             }
+
+            tryAutosave();
         }
 
         /**
@@ -383,20 +388,30 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
                 if (curTool === "eraser") {
                     hideEraserCircle();
                 }
-                tryAutosave();
-            }    
+            }
+            tryAutosave();
         }
 
+        function keepAspectRatio() {
+            let rect = document.getBoundingClientRect();
+            document.style.height = ((rect.width / aspect) + 40) + "px";
+            let canvasRect = canvas.getBoundingClientRect();
+            scale = canvas.width / canvasRect.width;
+        }
+        keepAspectRatio();
+        setTimeout(keepAspectRatio, 500);
+        document.ownerDocument.defaultView.addEventListener("resize", keepAspectRatio);
+        
         /**
          * Resize the canvas to be the same size as the window.
          */
         function resizeCanvas() {
             let rect = document.getBoundingClientRect();
             
-            canvas.width = rect.width * scale;
-            canvas.height = rect.height * scale;
-            canvas.style.width = rect.width + "px";
-            canvas.style.height = rect.height + "px";
+            canvas.width = canvas_width;
+            canvas.height = canvas_width / aspect;
+            canvas.style.width = "100%";
+            canvas.style.height = "calc(100% - 40px)";
         }
         resizeCanvas();
 
