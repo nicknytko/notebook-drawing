@@ -17,6 +17,7 @@ define([
         updateCellContents(cell, context);
         context.setAutosaveHandler(() => {
             updateCellContents(cell, context);
+            Jupyter.notebook.save_notebook();
         });
 
         /* Load the default image */
