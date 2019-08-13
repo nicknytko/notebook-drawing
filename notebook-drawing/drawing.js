@@ -25,7 +25,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
 
         /** Scaling of the canvas's internal resolution */
         var scale = 2;
-        const min_dist = 7;
+        const min_dist = 3.5;
         const eraser_scale = 3;
         const min_width = 2;
         const max_width = 20;
@@ -329,7 +329,7 @@ define(['jquery', './vector', './buffer', './text!./main.html', 'require'], func
                 } else {
                     let last = buffer.at(buffer.length - 1);
                     let curr = new DrawingPoint(touch);
-                    if (last.toOrigVec().dist(curr.toVec()) < min_dist) {
+                    if (last.toOrigVec().dist(curr.toVec()) < min_dist * scale) {
                         last.copy(curr);
                     } else {
                         buffer.push(curr);
