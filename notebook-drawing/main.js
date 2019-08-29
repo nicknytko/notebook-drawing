@@ -38,7 +38,7 @@ define([
 from IPython.display import Image
 Image(url="${context.getCanvasData()}")`;
         cell.set_text(text);
-        cell.execute();
+        /*cell.execute();*/
     }
 
     function loadCellsOnStartup(cells) {
