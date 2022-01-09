@@ -27,16 +27,14 @@ define([
     }
     
     function insertCell() {
-        let cell = Jupyter.notebook.insert_cell_below("code");
+        let cell = Jupyter.notebook.insert_cell_below("markdown");
         setupCell(cell);
     }
 
     function updateCellContents(cell, context) {
         let text =
-            `## This cell has annotations, run it with Ctrl+Enter to see them. ##
-## Or, download the notebook extension from (https://github.com/nicknytko/notebook-drawing) to view automatically. ##
-from IPython.display import Image
-Image(url="${context.getCanvasData()}")`;
+            `Annotations created with the [notebook-drawing extension](https://github.com/nicknytko/notebook-drawing):
+<img src="${context.getCanvasData()}"/>`;
         cell.set_text(text);
         /*cell.execute();*/
     }
