@@ -32,7 +32,6 @@ define([
     }
 
     function updateCellContents(cell, context) {
-        let extension_url = "https://github.com/nicknytko/notebook-drawing"
         let description = "Drawing created with the notebook-drawing extension (github.com/nicknytko/notebook-drawing)"
         let text =`<img src="${context.getCanvasData()}" title="${description}. Install the extension to edit." alt="${description}"/>`;
         cell.set_text(text);
