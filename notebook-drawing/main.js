@@ -27,16 +27,13 @@ define([
     }
     
     function insertCell() {
-        let cell = Jupyter.notebook.insert_cell_below("code");
+        let cell = Jupyter.notebook.insert_cell_below("markdown");
         setupCell(cell);
     }
 
     function updateCellContents(cell, context) {
-        let text =
-            `## This cell has annotations, run it with Ctrl+Enter to see them. ##
-## Or, download the notebook extension from (https://github.com/nicknytko/notebook-drawing) to view automatically. ##
-from IPython.display import Image
-Image(url="${context.getCanvasData()}")`;
+        let description = "Drawing created with the notebook-drawing extension (github.com/nicknytko/notebook-drawing)"
+        let text =`<img src="${context.getCanvasData()}" title="${description}. Install the extension to edit." alt="${description}"/>`;
         cell.set_text(text);
         /*cell.execute();*/
     }
@@ -45,7 +42,7 @@ Image(url="${context.getCanvasData()}")`;
         cells.forEach(cell => {
             if (cell.metadata.drawing_enabled) {
                 let text = cell.get_text();
-                let contents = text.split("\"")[1];
+                let contents = text.split("\"")[1]; // this seems fragile, but I don't know of a better way
                 setupCell(cell, contents);
             }
         });
